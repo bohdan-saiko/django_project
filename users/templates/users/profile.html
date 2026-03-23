@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <a href="/"><h3>Назад</h1></a>
+    
+    <h1>Профіль користувача: {{ user.username }}</h1>
+    <p>Email: {{ user.email }}</p>
+    <p>Про себе: {{ user.profile.bio }}</p>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Вийти з акаунта</button>
+    </form>
+</body>
+</html>
