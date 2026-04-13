@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} My site {% endblock %}</title>
     <link rel="stylesheet" href="{% static "main/style.css" %}">
+    {% block extra-head %} {% endblock %}
 </head>
 <body>
     <header>
@@ -12,7 +13,6 @@
             <a href="/">Home</a>
             <a href="/about">About us</a>
             <a href="/auth">Register</a>
-            <a href="/test">Test</a>
         </nav>
     </header>
 
@@ -21,6 +21,6 @@
         {% endblock %}
     </main>
 
-    <footer>Some text</footer>
+    <footer>@copyright</footer>
 </body>
 </html>

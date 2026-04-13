@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.choose-block-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.choose-block {
+    width: 412px;
+    height: 800px;
+    background-color: red;
+
+    border-radius: 12px;
+    border: 2px solid #000;
+
+    cursor: pointer;
+}
