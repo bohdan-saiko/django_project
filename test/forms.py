@@ -8,3 +8,13 @@ class TestFrom(forms.ModelForm):
         widgets = {
             'date_created': forms.DateInput(attrs={'type': 'date'}),
         }
+
+class TestItemFrom(forms.ModelForm):
+    class Meta:
+        model = TestItem
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['value']
+
