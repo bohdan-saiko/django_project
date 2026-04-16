@@ -12,6 +12,7 @@ class TestFrom(forms.ModelForm):
 class TestItemFrom(forms.ModelForm):
     class Meta:
         model = TestItem
+        fields = ['quiz_type']
 
 class QuestionForm(forms.ModelForm):
     class Meta:

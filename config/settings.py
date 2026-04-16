@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'main',
     'users',
     'test',
+    'category',
 ]
 
 MIDDLEWARE = [
