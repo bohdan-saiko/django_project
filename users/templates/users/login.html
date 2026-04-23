@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід в систему</title>
+    <style>
+        .errorlist { color: red; list-style: none; padding: 0; }
+        .form-group { margin-bottom: 15px; }
+        .login-container { max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Вхід</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 10px; margin-bottom: 10px; background-color: #d4edda; border: 1px solid #c3e6cb;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="errorlist">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+                {{ field }}
+                
+                {% if field.errors %}
+                    <div class="errorlist">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+                
+                {% if field.help_text %}
+                    <small style="color: gray;">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit">Увійти</button>
+    </form>
+
+    <p>Немає акаунту? <a href="{% url 'register' %}">Зареєструватися</a></p>
+</div>
+
+</body>
+</html>і
