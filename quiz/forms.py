@@ -1,5 +1,5 @@
 from django import forms
-from .models import Quiz, Question
+from .models import Quiz, Question, Choice
 
 class QuizCreateForm(forms.ModelForm):
     class Meta:
@@ -37,4 +37,18 @@ class QuestionForm(forms.ModelForm):
         labels = {
             'q_type': 'Тип питання',
             'text': 'Текст питання',
+        }
+
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        fields = ['text', 'is_correct']
+        widgets = {
+            'text': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Варіант відповіді'
+            }),
+            'is_correct': forms.CheckboxInput(attrs={
+                'class': 'form-checkbox'
+            }),
         }

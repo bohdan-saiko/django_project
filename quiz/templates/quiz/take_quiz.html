@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .question-card { display: none; }
+        .question-card.active { display: block; animation: fadeIn 0.3s; }
+        .choice-item { 
+            display: block; margin: 10px 0; padding: 15px; 
+            border: 1px solid #ddd; border-radius: 8px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .choice-item:hover { background: #f0f7ff; border-color: #4a90e2; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="quiz-title">{{ quiz.title }}</h2>
+        <div id="quiz-container">
+            {% for question in questions %}
+            <div class="question-card {% if forloop.first %}active{% endif %}" data-step="{{ forloop.counter0 }}">
+                <h3>Питання {{ forloop.counter }}: {{ question.text }}</h3>
+                <div class="choices">
+                    {% for choice in question.choices.all %}
+                        <div class="choice-item" 
+                            id="choice-{{ choice.id }}" 
+                            onclick="selectChoice('{{ question.id }}', '{{ choice.id }}', this)">
+                            {{ choice.text }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalQuestions = document.querySelectorAll('.question-card').length;
+
+        async function selectChoice(qId, cId, el) {
+            const container = el.closest('.question-card');
+            container.style.pointerEvents = 'none';
+
+            try {
+                const response = await fetch('/quiz/check-answer/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question_id: qId, choice_id: cId })
+                });
+
+                const data = await response.json();
+
+                if (data.is_correct) {
+                    el.style.background = '#d4edda';
+                    el.style.borderColor = '#28a745';
+                    el.innerHTML += ' ✅';
+                } else {
+                    el.style.background = '#f8d7da';
+                    el.style.borderColor = '#dc3545';
+                    el.innerHTML += ' ❌';
+
+                    data.correct_ids.forEach(id => {
+                        const correctEl = document.getElementById(`choice-${id}`);
+                        if (correctEl) {
+                            correctEl.style.border = '2px solid #28a745';
+                            correctEl.style.background = '#f0fff4';
+                        }
+                    });
+                }
+
+                setTimeout(() => {
+                    if (currentStep + 1 < totalQuestions) {
+                        nextQuestion();
+                    } else {
+                        showFinalResult();
+                    }
+                }, 1200);
+
+            } catch (error) {
+                console.error("Помилка:", error);
+                container.style.pointerEvents = 'auto';
+            }
+        }
+
+        function nextQuestion() {
+            const cards = document.querySelectorAll('.question-card');
+            cards[currentStep].classList.remove('active');
+            currentStep++;
+            cards[currentStep].classList.add('active');
+        }
+
+        async function showFinalResult() {
+            document.getElementById('quiz-title').style.display = 'none';
+            
+            const response = await fetch(`/quiz/{{ quiz.id }}/final-score/`);
+            const data = await response.json();
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <h2 style="color: #333;">🎉 Тест завершено!</h2>
+                    <p style="color: #666;">Твій результат:</p>
+                    <div style="font-size: 5rem; font-weight: bold; color: #28a745; margin: 20px 0;">
+                        ${data.score} / ${data.total}
+                    </div>
+                    <p style="margin-bottom: 25px;">Результат захищено та збережено на сервері.</p>
+                    <a href="/" style="display: inline-block; background: #4a90e2; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold;">На головну</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -56,7 +56,7 @@
         {% for cat in categories %}
             <div class="category-card">
                 <h3>{{ cat.title }}</h3>
-                <a href="#" class="btn">Відкрити тести</a>
+                <a href="/quiz/category/{{ cat.id }}" class="btn">Відкрити тести</a>
             </div>
         {% empty %}
             <p class="empty-msg">Категорій поки що немає</p>

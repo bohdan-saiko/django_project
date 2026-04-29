@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Додавання питання до квізу: "{{ quiz.title }}"</h2>
+        
+        <form method="post">
+        {% csrf_token %}
+        
+        <div class="question-card">
+            {{ form.as_p }}
+        </div>
+
+        <hr>
+        <h3>Варіанти відповідей:</h3>
+        <p><small>Заповніть мінімум два варіанти. Порожні поля будуть ігноровані.</small></p>
+        
+        {{ choice_formset.management_form }}
+        
+        <div class="choices-container">
+            {% for c_form in choice_formset %}
+                <div class="choice-row">
+                    <span class="number">{{ forloop.counter }}.</span>
+                    {{ c_form.text }}
+                    <label>
+                        {{ c_form.is_correct }} Правильна?
+                    </label>
+                    {% if c_form.errors %}
+                        <div class="error">{{ c_form.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn">Додати ще питання</button>
+            <button type="submit" name="finish" class="btn btn-finish">Я закінчив, зберегти квіз</button>
+        </div>
+    </form>
+    </div>
+</body>
+</html>

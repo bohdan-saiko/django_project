@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ quiz.title }}</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .quiz-header {
+            border-bottom: 2px solid var(--bg);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .btn-start {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+            margin-top: 20px;
+        }
+        .btn-start:hover {
+            background: #219150;
+            transform: translateY(-2px);
+        }
+        .meta {
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="quiz-header">
+        <h1>{{ quiz.title }}</h1>
+        {% if quiz.category %}
+            <span class="badge">{{ quiz.category.name }}</span>
+        {% endif %}
+    </div>
+
+    <p>{{ quiz.description }}</p>
+
+    <div class="meta">
+        <p>Автор: <strong>{{ quiz.author.username }}</strong></p>
+        <p>Кількість питань: {{ quiz.questions.count }}</p>
+        <p>Створено: {{ quiz.created_at|date:"d.m.Y" }}</p>
+    </div>
+
+    {# Тут ми просто ведемо на майбутню сторінку проходження #}
+    <a href="/quiz/{{ quiz.id }}/take/" class="btn-start">🚀 Почати тест</a>
+</div>
+
+</body>
+</html>
