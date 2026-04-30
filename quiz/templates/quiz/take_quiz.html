@@ -3,17 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Quiz</title>
     <style>
         .question-card { display: none; }
         .question-card.active { display: block; animation: fadeIn 0.3s; }
+        
         .choice-item { 
-            display: block; margin: 10px 0; padding: 15px; 
+            display: flex; align-items: center; margin: 10px 0; padding: 15px; 
             border: 1px solid #ddd; border-radius: 8px; cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s; position: relative;
         }
         .choice-item:hover { background: #f0f7ff; border-color: #4a90e2; }
         
+        .choice-item.selected {
+            border-color: #4a90e2;
+            background-color: #eef6ff;
+            box-shadow: inset 0 0 0 1px #4a90e2;
+        }
+
+        .checkbox-indicator {
+            width: 18px; height: 18px; border: 2px solid #ccc;
+            border-radius: 4px; margin-right: 12px; transition: 0.2s;
+        }
+        .selected .checkbox-indicator {
+            background-color: #4a90e2; border-color: #4a90e2;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .btn-confirm {
+            display: block; width: 100%; padding: 12px; margin-top: 15px;
+            background: #4a90e2; color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: bold; font-size: 1rem;
+        }
+        .btn-confirm:hover { background: #357abd; }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -25,17 +49,32 @@
         <h2 id="quiz-title">{{ quiz.title }}</h2>
         <div id="quiz-container">
             {% for question in questions %}
-            <div class="question-card {% if forloop.first %}active{% endif %}" data-step="{{ forloop.counter0 }}">
+            <div class="question-card {% if forloop.first %}active{% endif %}" 
+                 id="q-card-{{ question.id }}"
+                 data-type="{{ question.q_type }}">
+                
                 <h3>Питання {{ forloop.counter }}: {{ question.text }}</h3>
                 <div class="choices">
                     {% for choice in question.choices.all %}
                         <div class="choice-item" 
                             id="choice-{{ choice.id }}" 
-                            onclick="selectChoice('{{ question.id }}', '{{ choice.id }}', this)">
-                            {{ choice.text }}
+                            onclick="handleSelection('{{ question.id }}', '{{ choice.id }}', this, '{{ question.q_type }}')">
+                            
+                            {% if question.q_type == 'MULTI' %}
+                                <div class="checkbox-indicator"></div>
+                            {% endif %}
+                            
+                            <span class="choice-text">{{ choice.text }}</span>
                         </div>
                     {% endfor %}
                 </div>
+
+                {% if question.q_type == 'MULTI' %}
+                    <button id="btn-{{ question.id }}" class="btn-confirm" style="visibility: hidden;" 
+                            onclick="submitMulti('{{ question.id }}')">
+                        Підтвердити вибір
+                    </button>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -43,33 +82,57 @@
 
     <script>
         let currentStep = 0;
+        let selectedChoices = []; 
         const totalQuestions = document.querySelectorAll('.question-card').length;
 
-        async function selectChoice(qId, cId, el) {
-            const container = el.closest('.question-card');
-            container.style.pointerEvents = 'none';
+        function handleSelection(qId, cId, el, qType) {
+            if (qType === 'MULTI') {
+                el.classList.toggle('selected');
+                if (selectedChoices.includes(cId)) {
+                    selectedChoices = selectedChoices.filter(id => id !== cId);
+                } else {
+                    selectedChoices.push(cId);
+                }
+                const btn = document.getElementById(`btn-${qId}`);
+                btn.style.visibility = selectedChoices.length > 0 ? 'visible' : 'hidden';
+            } else {
+                sendResult(qId, [cId]);
+            }
+        }
+
+        async function submitMulti(qId) {
+            if (selectedChoices.length === 0) return;
+            await sendResult(qId, selectedChoices);
+        }
+
+        async function sendResult(qId, choiceIds) {
+            const card = document.getElementById(`q-card-${qId}`);
+            card.style.pointerEvents = 'none';
 
             try {
-                const response = await fetch('/quiz/check-answer/', {
+                const response = await fetch('{% url "check_answer" %}', {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ question_id: qId, choice_id: cId })
+                    body: JSON.stringify({ question_id: qId, choice_ids: choiceIds })
                 });
 
                 const data = await response.json();
 
-                if (data.is_correct) {
-                    el.style.background = '#d4edda';
-                    el.style.borderColor = '#28a745';
-                    el.innerHTML += ' ✅';
-                } else {
-                    el.style.background = '#f8d7da';
-                    el.style.borderColor = '#dc3545';
-                    el.innerHTML += ' ❌';
+                choiceIds.forEach(id => {
+                    const el = document.getElementById(`choice-${id}`);
+                    if (data.is_correct) {
+                        el.style.background = '#d4edda';
+                        el.style.borderColor = '#28a745';
+                    } else {
+                        el.style.background = '#f8d7da';
+                        el.style.borderColor = '#dc3545';
+                    }
+                });
 
+                if (!data.is_correct) {
                     data.correct_ids.forEach(id => {
                         const correctEl = document.getElementById(`choice-${id}`);
                         if (correctEl) {
@@ -82,14 +145,15 @@
                 setTimeout(() => {
                     if (currentStep + 1 < totalQuestions) {
                         nextQuestion();
+                        selectedChoices = [];
                     } else {
                         showFinalResult();
                     }
-                }, 1200);
+                }, 1500);
 
             } catch (error) {
                 console.error("Помилка:", error);
-                container.style.pointerEvents = 'auto';
+                card.style.pointerEvents = 'auto';
             }
         }
 
@@ -102,7 +166,6 @@
 
         async function showFinalResult() {
             document.getElementById('quiz-title').style.display = 'none';
-            
             const response = await fetch(`/quiz/{{ quiz.id }}/final-score/`);
             const data = await response.json();
 
@@ -110,11 +173,9 @@
             container.innerHTML = `
                 <div style="text-align: center; padding: 40px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                     <h2 style="color: #333;">🎉 Тест завершено!</h2>
-                    <p style="color: #666;">Твій результат:</p>
                     <div style="font-size: 5rem; font-weight: bold; color: #28a745; margin: 20px 0;">
                         ${data.score} / ${data.total}
                     </div>
-                    <p style="margin-bottom: 25px;">Результат захищено та збережено на сервері.</p>
                     <a href="/" style="display: inline-block; background: #4a90e2; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold;">На головну</a>
                 </div>
             `;
