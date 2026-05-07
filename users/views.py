@@ -32,7 +32,11 @@ def register(request):
     if not form.is_valid():
         return render(request, 'users/register.html', {'form': form})
 
-    form.save()
+    user = form.save() 
+    
+    from .models import Profile
+    Profile.objects.create(user=user)
+
     username = form.cleaned_data.get('username')
     messages.success(request, f'Акаунт для {username} успішно створено!')
     return redirect('login')

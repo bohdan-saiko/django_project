@@ -1,16 +1,16 @@
-{% extends 'main/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block extra-head %}
-    <link rel="stylesheet" href="{% static '/main/css/style.css' %}">
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
 {% endblock %}
 
 {% block title %}Choose your way{% endblock %}
 
 {% block content %}
-    <h1>Обирай</h1>
+    <h1>Silly little tests</h1>
     <section class="choose-block-container">
-        <a class="choose-block" href="/category/">Грати</a>
-        <a class="choose-block" href="/quiz/created">Створювати</a>
+        <a class="choose-block" href="{% url 'category_list' %}">Take a test</a>
+        <a class="choose-block" href="{% url 'created_quizzes' %}">Create a test</a>
     </section>
 {% endblock %}

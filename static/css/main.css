@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: "Anonymous Pro", monospace;
+    font-weight: 400;
+    font-style: normal;
+    cursor:default;
+}
+
+header {
+    padding: 8px 48px;
+    background-color: #836DFF;
+    width: 100%;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.navbar {
+    display: flex;
+    padding: 15px 30px;
+    align-items: center;
+    justify-content: start;
+}
+
+.container {
+    flex: 1; 
+}
+
+footer {
+    background-color: #6B51FF;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+}
