@@ -1,67 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        ul {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            font-family: sans-serif;
-        }
+{% extends 'base.html' %}
+{% load static %}
 
-        li {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+{% block title %}{{ category.title }}{% endblock %}
 
-        li:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-color: #007bff;
-        }
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'quiz/css/quiz-list.css' %}">
+{% endblock %}
 
-        li strong {
-            display: block;
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 8px;
-        }
+{% block content %}
+<div class="container">
+    <h1>{{ category.title }}</h1>
 
-        li span {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        h1 {
-            font-family: sans-serif;
-            color: #222;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-    </style>
-</head>
-<body>
-    <h1>Квізи категорії: {{ category.title }}</h1>
-
-    <ul>
+    <div class="quiz-list">
         {% for quiz in quizzes %}
-            <li>
-                <a href="/quiz/{{ quiz.id }}">{{ quiz.title }} — Автор: {{ quiz.author.username }}</a>
-            </li>
+            <a href="{% url 'quiz_detail' quiz.id %}" class="quiz-item">
+                <img src="{% static 'quiz/img/quiz-icon.svg' %}" alt="" class="quiz-icon">
+                
+                <div class="text-wrapper">
+                    <div class="date-title-wrapper">
+                        <h2 class="title">{{ quiz.title }}</h2>
+                        <p class="gray-text">{{ quiz.created_at|date:"d.m.Y" }}</p>
+                    </div>
+                    
+                    <p class="gray-text">{{ quiz.description|truncatechars:100|default:"Опис відсутній" }}</p>
+                    
+                    <p class="author">By: {{ quiz.author.username }}</p>
+                </div>
+            </a>
         {% empty %}
-            <li>У цій категорії поки немає квізів.</li>
+            <p class="empty-msg">У цій категорії поки немає квізів.</p>
         {% endfor %}
-    </ul>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}

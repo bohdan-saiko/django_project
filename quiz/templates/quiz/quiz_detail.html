@@ -1,85 +1,50 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ quiz.title }}</title>
-    <style>
-        :root {
-            --primary: #4a90e2;
-            --bg: #f4f7f6;
-            --text: #333;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            padding: 40px;
-        }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .quiz-header {
-            border-bottom: 2px solid var(--bg);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-        .badge {
-            background: var(--primary);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        .btn-start {
-            display: inline-block;
-            background: #27ae60;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: transform 0.2s, background 0.2s;
-            margin-top: 20px;
-        }
-        .btn-start:hover {
-            background: #219150;
-            transform: translateY(-2px);
-        }
-        .meta {
-            color: #777;
-            font-size: 0.9rem;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %}{{ quiz.title }} - Photo Fun{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'quiz/css/quiz-detail.css' %}">
+{% endblock %}
+
+{% block content %}
 <div class="container">
-    <div class="quiz-header">
-        <h1>{{ quiz.title }}</h1>
-        {% if quiz.category %}
-            <span class="badge">{{ quiz.category.name }}</span>
-        {% endif %}
+    <div class="quiz-detail-wrapper">
+        
+        <header class="quiz-header">
+            <h1>{{ quiz.title }}</h1>
+        </header>
+
+        <section class="quiz-body">
+            <p class="description">
+                {{ quiz.description|default:"Цей квіз не має опису, але він точно цікавий!" }}
+            </p>
+
+            <div class="meta-info">
+                <div class="meta-item">
+                    <strong>Автор:</strong> <span>{{ quiz.author.username }}</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Питань у тесті:</strong> <span>{{ quiz.questions.count }}</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Дата створення:</strong> <span>{{ quiz.created_at|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="quiz-footer">
+            <a href="{% url 'quiz_take' quiz.id %}" class="btn-start">
+                🚀 Почати тест
+            </a>
+            
+            <div style="margin-top: 20px;">
+                <a href="{% url 'category_detail' quiz.category.id %}" class="back-link">
+                    ← Повернутися до списку
+                </a>
+            </div>
+        </footer>
+
     </div>
-
-    <p>{{ quiz.description }}</p>
-
-    <div class="meta">
-        <p>Автор: <strong>{{ quiz.author.username }}</strong></p>
-        <p>Кількість питань: {{ quiz.questions.count }}</p>
-        <p>Створено: {{ quiz.created_at|date:"d.m.Y" }}</p>
-    </div>
-
-    {# Тут ми просто ведемо на майбутню сторінку проходження #}
-    <a href="/quiz/{{ quiz.id }}/take/" class="btn-start">🚀 Почати тест</a>
 </div>
-
-</body>
-</html>
+{% endblock %}

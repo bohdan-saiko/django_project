@@ -1,74 +1,24 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>Всі категорії тестів</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .category-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            background-color: #f9f9f9;
-        }
+{% extends 'base.html' %}
+{% load static %}
 
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-color: #3498db;
-        }
+{% block title %}Всі категорії тестів - Photo Fun{% endblock %}
 
-        .category-card h3 { margin: 0 0 10px 0; color: #3498db; }
-        
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'category/css/list.css' %}">
+{% endblock %}
 
-        .btn:hover { background-color: #2980b9; }
-        
-        .empty-msg { font-style: italic; color: #7f8c8d; }
-    </style>
-</head>
-<body>
-
-<div class="container">
+{% block content %}
+<div class="content-wrapper">
     <h1>Оберіть тему тесту</h1>
 
     <div class="category-grid">
         {% for cat in categories %}
-            <div class="category-card">
+            <a href="/quiz/category/{{ cat.id }}" class="category-card">
                 <h3>{{ cat.title }}</h3>
-                <a href="/quiz/category/{{ cat.id }}" class="btn">Відкрити тести</a>
-            </div>
+            </a>
         {% empty %}
             <p class="empty-msg">Категорій поки що немає</p>
         {% endfor %}
     </div>
-
-    <hr style="margin-top: 40px;">
-    <p>
-        <a href="/">← На головну</a> | 
-        <a href="/test/create/">Створити власний тест</a>
-    </p>
 </div>
-
-</body>
-</html>
+{% endblock %}

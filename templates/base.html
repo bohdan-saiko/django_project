@@ -14,8 +14,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-
-    <header>
+    <aside class="sidebar">
         <nav class="navbar">
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}">Головна</a></li>
@@ -27,15 +26,12 @@
                 {% endif %}
             </ul>
         </nav>
-    </header>
+    </aside>
 
     <main class="container">
         {% block content %}
         {% endblock %}
     </main>
-
-    <footer>
-    </footer>
 
     {% block extra_js %}{% endblock %}
 </body>
