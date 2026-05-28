@@ -1,58 +1,49 @@
 <!DOCTYPE html>
-<html lang="uk">
+{% load static %}
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Вхід в систему</title>
-    <style>
-        .errorlist { color: red; list-style: none; padding: 0; }
-        .form-group { margin-bottom: 15px; }
-        .login-container { max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static "/css/main.css" %}">
+    <link rel="stylesheet" href="{% static 'users/css/auth.css' %}">
 </head>
 <body>
+    <main>
+        <section class="form-container">
+            <h2 class="form-title">Sign in</h2>
+            <form method="POST">
+                {% csrf_token %}
 
-<div class="login-container">
-    <h2>Вхід</h2>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div style="padding: 10px; margin-bottom: 10px; background-color: #d4edda; border: 1px solid #c3e6cb;">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form method="POST">
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-            <div class="errorlist">
-                {{ form.non_field_errors }}
-            </div>
-        {% endif %}
-
-        {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
-                {{ field }}
-                
-                {% if field.errors %}
+                {% if form.non_field_errors %}
                     <div class="errorlist">
-                        {{ field.errors }}
+                        {{ form.non_field_errors }}
                     </div>
                 {% endif %}
-                
-                {% if field.help_text %}
-                    <small style="color: gray;">{{ field.help_text }}</small>
-                {% endif %}
-            </div>
-        {% endfor %}
 
-        <button type="submit">Увійти</button>
-    </form>
-
-    <p>Немає акаунту? <a href="{% url 'register' %}">Зареєструватися</a></p>
-</div>
-
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+                        {{ field }}
+                        
+                        {% if field.errors %}
+                            <div class="errorlist">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <small style="color: gray;">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <p>Don`t have an account? <a href="{% url 'register' %}">Sign up</a></p>
+                <button type="submit" class="submit-btn">Save</button>
+            </form>
+        </section>
+        <section class='color'>
+            <h1 class="title">SILLY LITTLE TESTS</h1>
+        </section>
+    </main> 
 </body>
-</html>і
+</html>
