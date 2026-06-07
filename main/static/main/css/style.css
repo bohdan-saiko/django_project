@@ -37,3 +37,12 @@ h1 {
     font-size: 24px;
     font-weight: bold;
 }
+
+.counter-wrapper {
+    padding: 10px;
+    background-color: #e3f2fd;
+    border-radius: 5px;
+    display: inline-block;
+    font-family: sans-serif;
+    margin: 20px;
+}
