@@ -14,23 +14,77 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <aside class="sidebar">
-        <nav class="navbar">
-            <ul class="nav-links">
-                <li><a href="{% url 'home' %}">Головна</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'profile' %}">Профіль</a></li>
-                {% else %}
-                    <li><a href="{% url 'login' %}">Увійти</a></li>
-                    <li><a href="{% url 'register' %}">Реєстрація</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </aside>
+    
+    <nav class="sidebar">
+      <div class="sidebar-inner">
+    
+        <!-- LOGO -->
+        <div class="logo-row">
+          <div class="logo-icon">🧠</div>
+          <div class="logo-text">
+            <span class="logo-top">Silly Little</span>
+            <span class="logo-bottom">Tests</span>
+          </div>
+        </div>
+    
+        <!-- SEARCH -->
+        <div class="search-section">
+          <div class="search-wrap">
+            <input class="search-input" type="text" placeholder="<> Test code">
+            <button class="search-btn">Search</button>
+          </div>
+        </div>
+    
+        <div class="divider"></div>
+    
+        <div class="section-label">Quiz Room</div>
+    
+        <ul class="nav-list">
+          <li class="nav-item">
+            <div class="nav-icon">🔍</div>
+            <span class="nav-label">Take a test</span>
+          </li>
+          <li class="nav-item">
+            <div class="nav-icon">✨</div>
+            <span class="nav-label">Create a test</span>
+          </li>
+        </ul>
+    
+        <div class="spacer"></div>
+    
+        <!-- USER -->
+        <div class="user-row">
+          <div class="avatar">🐸</div>
+          <div class="user-info">
+            <div class="badge">legendary</div>
+            <div class="user-name">Name</div>
+          </div>
+        </div>
+    
+        <!-- FOOTER -->
+        <div class="footer">
+          <div class="footer-text">
+            <div>
+              <p>
+                Developed by Sayko Bohdan 
+              </p>
+              <p>
+                and Suhanyaka Nadiya
+              </p>
+            </div>
+            <p id="p-rights">
+                ©2026 All rights reserved
+            </p>
+            
+          </div>
+        </div>
+    
+      </div>
+    </nav>
 
     <main class="container">
-        {% block content %}
-        {% endblock %}
+      {% block content %}
+      {% endblock %}
     </main>
 
     {% block extra_js %}{% endblock %}
