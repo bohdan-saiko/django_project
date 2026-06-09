@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ quiz.title }} | Silly Little Tests{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'quiz/css/take_quiz.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="quiz-container">
+        {% for question in questions %}
+            <div class="question-card {% if forloop.first %}active{% endif %}" id="q-card-{{ question.id }}" data-type="{{ question.q_type }}">
+                
+                <div class="quiz-layout">
+                    <div class="quiz-header"></div>
+
+                    <div class="quiz-body">
+                        <h3 class="question-text">
+                            {{ question.text }}
+                        </h3>
+                    </div>
+
+                    <div class="quiz-footer-choices">
+                        {% for choice in question.choices.all %}
+                            <div class="choice-item" id="choice-{{ choice.id }}" onclick="handleSelection('{{ question.id }}', '{{ choice.id }}', this, '{{ question.q_type }}')">
+                                
+                                {% if question.q_type == 'MULTI' %}
+                                    <div class="checkbox-indicator"></div>
+                                {% endif %}
+                                
+                                <span class="choice-text">{{ choice.text }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="quiz-footer-action">
+                        {% if question.q_type == 'MULTI' %}
+                            <button id="btn-{{ question.id }}" class="btn-complete" style="visibility: hidden;" onclick="submitMulti('{{ question.id }}')">
+                                SAVE
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        window.QuizConfig = {
+            checkAnswerUrl: "{% url 'check_answer' %}",
+            finalScoreUrl: "/quiz/{{ quiz.id }}/final-score/",
+            csrfToken: "{{ csrf_token }}"
+        };
+    </script>
+    <script src="{% static 'quiz/js/take_quiz.js' %}"></script>
+{% endblock %}

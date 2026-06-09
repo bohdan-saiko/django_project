@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static "/css/main.css" %}">
+    <link rel="stylesheet" href="{% static 'users/css/auth.css' %}">
+</head>
+<body>
+    <main>
+        <section class='color'>
+            <h1 class="title">SILLY LITTLE TESTS</h1>
+        </section>
+        <section class="form-container">
+            <h2 class="form-title">Sign up</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+                <button type="submit" class="submit-btn">Save</button>
+            </form>
+        </section> 
+    </main> 
+</body>
+</html>

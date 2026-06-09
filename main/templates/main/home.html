@@ -1,7 +1,22 @@
-{% extends 'main/base.html' %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block title %} Title {% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+{% endblock %}
+
+{% block title %}Choose your way{% endblock %}
 
 {% block content %}
-    <h1>Some text</h1>
+    <h1>Silly little tests</h1>
+    <section class="choose-block-container">
+        <a class="choose-block" href="{% url 'category_list' %}">Take a test</a>
+        <a class="choose-block" href="{% url 'created_quizzes' %}">Create a test</a>
+    </section>
+    <div id="counter-wrapper" style="padding: 10px; background: #e3f2fd; border-radius: 5px; display: inline-block; font-family: sans-serif; margin: 20px;">
+        <span>Online: <strong id="online-counter"></strong></span>
+    </div>
+
+    <script src="{% static 'main/js/home.js' %}"></script>
+
 {% endblock %}

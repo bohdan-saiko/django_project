@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ quiz.title }} - Photo Fun{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'quiz/css/quiz-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <img src="{% static 'quiz/img/arrow_back.svg' %}" alt="" class="back-arrow">
+    <section class="info-container">
+        <h1 class="quiz-title">{{ quiz.title }}</h1>
+        <div class="info">
+            <div class="upper-info-wrapper">
+                <div class="img-meta-wrapper">
+                    <img src="{% static 'quiz/img/mock-quiz-img.jpg' %}" alt="">
+                    <div class="meta-info-wrapper">
+                        <p class="meta-info">Category: IT</p>
+                        <p class="meta-info">Question: {{ quiz.questions.count }}</p>
+                        <p class="meta-info">Author: {{ quiz.author.username }}</p>
+                    </div>
+                </div>
+                
+                <p class="info-date">{{ quiz.created_at|date:"d.m.Y" }}</p>
+            </div>
+            <p class="description">{{ quiz.description }}</p>
+        </div>
+    </section>
+    
+    <footer class="quiz-detail-footer">
+        <button class="quiz-detail-footer__btn copy">copy link</button>
+        <a class="quiz-detail-footer__btn start" href="{% url 'take_quiz' quiz.id %}">START</a>
+    </footer>
+</div>
+{% endblock %}

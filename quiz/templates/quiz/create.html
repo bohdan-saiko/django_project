@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Створення квізу</title>
+<style>
+    .form-input { width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc; }
+    .btn-primary { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Створити новий квіз</h2>
+        <form method="post" class="quiz-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit" class="btn-primary">Далі: Додати питання</button>
+        </form>
+    </div>
+</body>
+</html>

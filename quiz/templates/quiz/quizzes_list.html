@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.title }}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'quiz/css/quiz-list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ category.title }}</h1>
+
+    <div class="quiz-list">
+        {% for quiz in quizzes %}
+            <a href="{% url 'quiz_detail' quiz.id %}" class="quiz-item">
+                <img src="{% static 'quiz/img/quiz-icon.svg' %}" alt="" class="quiz-icon">
+                
+                <div class="text-wrapper">
+                    <div class="date-title-wrapper">
+                        <h2 class="title">{{ quiz.title }}</h2>
+                        <p class="gray-text">{{ quiz.created_at|date:"d.m.Y" }}</p>
+                    </div>
+                    
+                    <p class="gray-text">{{ quiz.description|truncatechars:100|default:"Опис відсутній" }}</p>
+                    
+                    <p class="author">By: {{ quiz.author.username }}</p>
+                </div>
+            </a>
+        {% empty %}
+            <p class="empty-msg">У цій категорії поки немає квізів.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

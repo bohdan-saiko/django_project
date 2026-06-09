@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ваші квізи</h1>
+
+    <ul>
+        <li>
+            <a href="/quiz/create">Додати квіз</a>
+        </li>
+        {% for quiz in quizzes %}
+            <li>
+                <strong>{{ quiz.title }}</strong>
+                <p>{{ quiz.description }}</p>
+                <div class="actions">
+                    <a href="{% url 'add_question' quiz.id %}" class="btn">Питання</a>
+                    <a href="{% url 'edit_quiz_metadata' quiz.id %}" class="btn-settings">⚙️</a>
+                    
+                    <form action="{% url 'delete_quiz' quiz.id %}" method="post" style="display:inline;" 
+                        onsubmit="return confirm('Ви впевнені, що хочете видалити цей квіз?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete" style="background: none; border: none; color: red; cursor: pointer;">
+                            🗑️ Видалити
+                        </button>
+                    </form>
+                </div>
+            </li>
+        {% empty %}
+            <li>У вас поки немає створених квізів.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

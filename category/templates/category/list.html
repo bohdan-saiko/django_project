@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Всі категорії тестів - Photo Fun{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'category/css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h1>Оберіть тему тесту</h1>
+
+    <div class="category-grid">
+        {% for cat in categories %}
+            <a href="/quiz/category/{{ cat.id }}" class="category-card">
+                <h3>{{ cat.title }}</h3>
+            </a>
+        {% empty %}
+            <p class="empty-msg">Категорій поки що немає</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
